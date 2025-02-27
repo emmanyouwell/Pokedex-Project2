@@ -14,32 +14,62 @@ const CardListView = () => {
     const loader = useRef(null);
     const [search, setSearch] = useState('');
     const [isSearching, setIsSearching] = useState(false);
-    const handleSubmit = () => {
+    const [sort, setSort] = useState('');
+
+    const sortIDDesc = () => {
+        setSort('idDesc');
+        setPokemonList([]);
+        setPage(1000);
         
+    }
+    const sortIDAsc = () => {
+        setSort('idAsc');
+        setPokemonList([]);
+        setPage(0);
+    }
+    const sortNameDesc = () => {
+        setSort('nameDesc');
+        setPokemonList([]);
+        setPage(0);
+    }
+    const handleSubmit = () => {
+
         setIsSearching(search.length > 0);
         setPokemonList([]);
         if (search.length === 0) {
             setPage(0);
             return;
         }
-     
+
         dispatch(getPokemons({ search: search }))
     }
-    const fetchNextPokemon = () => {
+    const fetchNextPokemon = (sort) => {
+        console.log("Fetching: ", page);
         setTimeout(() => {
-            if (page > count) {
+            if (page > 1000) {
                 setHasMore(false);
                 return;
             }
-            console.log("page: ", page)
-            setPage((prevPage) => prevPage + 10);
+            switch(sort){
+                case 'idDesc':
+                    setPage((prevPage) => prevPage - 10);
+                    break;
+                case 'idAsc':
+                    setPage((prevPage) => prevPage + 10);
+                    break;
+                default:
+                    setPage((prevPage) => prevPage + 10);
+                    break;
+            }
+            
+           
         }, 1000)
     }
     useEffect(() => {
         const observer = new IntersectionObserver(
             (entries) => {
                 if (entries[0].isIntersecting && !isSearching) {
-                    fetchNextPokemon()
+                    fetchNextPokemon(sort)
                 }
             },
             { threshold: 1 }
@@ -54,10 +84,16 @@ const CardListView = () => {
                 observer.unobserve(loader.current);
             }
         };
-    }, [isSearching]);
+    }, [isSearching, sort]);
     useEffect(() => {
-        dispatch(getPokemons({ offset: page }))
-    }, [page])
+        if (page){
+            console.log("page: ", page);
+        }
+        if (sort){
+            console.log("sort: ", sort);
+        }
+        dispatch(getPokemons({ offset: page, sort: sort }))
+    }, [page, sort])
     useEffect(() => {
         if (error) {
             dispatch(clearError())
@@ -71,14 +107,7 @@ const CardListView = () => {
             setPokemonList([pokemons])
         }
     }, [pokemons])
-    useEffect(() => {
-        if (pokemonList) {
-            console.log("pokemonlist: ", pokemonList)
-        }
-        if (count) {
-            console.log("count: ", count);
-        }
-    }, [pokemonList, count])
+   
 
     return (
         <>
@@ -90,10 +119,23 @@ const CardListView = () => {
                     </div>
                     <div className="flex gap-2">
                         <span className="font-semibold">Sort: </span>
-                        <ArrowDown10 className="hover:bg-gray-600 hover:text-white rounded-md w-6 h-6"/>
-                        <ArrowUp01 className="hover:bg-gray-600 hover:text-white rounded-md w-6 h-6"/>
-                        <ArrowDownZA className="hover:bg-gray-600 hover:text-white rounded-md w-6 h-6"/>
-                        <ArrowUpAZ className="hover:bg-gray-600 hover:text-white rounded-md w-6 h-6"/>
+                        <div className="group relative inline-block">
+                            <ArrowDown10 className="hover:bg-gray-600 hover:cursor-pointer hover:text-white rounded-md w-6 h-6" onClick={sortIDDesc}/>
+                            <span className="absolute left-1/2 transform -translate-x-1/2 translate-y-20 bottom-full mb-2 w-max px-2 py-1 text-white text-sm bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity">Sort by ID (Desc)</span>
+                        </div>
+                        <div className="group relative inline-block">
+                            <ArrowUp01 className="hover:bg-gray-600 hover:cursor-pointer hover:text-white rounded-md w-6 h-6" onClick={sortIDAsc}/>
+                            <span className="absolute left-1/2 transform -translate-x-1/2 translate-y-20 bottom-full mb-2 w-max px-2 py-1 text-white text-sm bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity">Sort by ID (Asc)</span>
+                        </div>
+                        <div className="group relative inline-block">
+                            <ArrowDownZA className="hover:bg-gray-600 hover:cursor-pointer hover:text-white rounded-md w-6 h-6" onClick={sortNameDesc}/>
+                            <span className="absolute left-1/2 transform -translate-x-1/2 translate-y-20 bottom-full mb-2 w-max px-2 py-1 text-white text-sm bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity">Sort by Name (Desc)</span>
+                        </div>
+                        <div className="group relative inline-block">
+                            <ArrowUpAZ className="hover:bg-gray-600 hover:cursor-pointer hover:text-white rounded-md w-6 h-6" />
+                            <span className="absolute left-1/2 transform -translate-x-1/2 translate-y-20 bottom-full mb-2 w-max px-2 py-1 text-white text-sm bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity">Sort by Name (Asc)</span>
+                        </div>
+
                     </div>
 
                 </div>
