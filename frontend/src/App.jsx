@@ -1,7 +1,8 @@
 import React,{ useState } from "react";
 import Card from "./components/Card";
 import CardListView from "./components/CardListView";
-
+import {ToastContainer} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <CardListView/>
       </div>
       
+      <ToastContainer/>
     </>
   );
 }

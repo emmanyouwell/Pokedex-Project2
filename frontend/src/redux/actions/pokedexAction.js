@@ -1,18 +1,19 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-
+import { toast } from 'react-toastify';
 const VITE_APP_URL = import.meta.env.VITE_APP_URL;
 
 export const getPokemons = createAsyncThunk(
     'pokedex/getPokemons',
-    async ({offset=0}, thunkAPI) => {
+    async ({offset=0, search=""}, thunkAPI) => {
         try {
-            
-            const response = await axios.get(`${VITE_APP_URL}/api/v1/pokemon/?offset=${offset}`)
-
+            console.log("inside the action")
+            const response = await axios.get(`${VITE_APP_URL}/api/v1/pokemon/?offset=${offset}&search=${search}`);
+            console.log("response: ", response.data)
             return response.data;
         } catch (error) {
-            return thunkAPI.rejectWithValue(error.message);
+            toast.error(error.response.data.error, {position: "bottom-right"});
+            return thunkAPI.rejectWithValue(error.response.data.error);
         }
     }
 );
