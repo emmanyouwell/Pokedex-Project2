@@ -32,29 +32,38 @@ const CardListView = () => {
         setPage(0);
     }
     const sortNameDesc = () => {
+        if (page === 1 && sort === 'nameDesc') {
+            return;
+        }
         setSort('nameDesc');
+
         setPokemonList([]);
         setSearch('');
         setIsSearching(false);
-        setPage(0);
+        setPage(1);
     }
     const sortNameAsc = () => {
+        if (page === 1 && sort === 'nameAsc') {
+            return;
+        }
         setSort('nameAsc');
+
         setPokemonList([]);
         setSearch('');
         setIsSearching(false);
-        setPage(0);
+        setPage(1);
     }
     const handleSubmit = () => {
 
         setIsSearching(search.length > 0);
         setPokemonList([]);
-        // setSort('');
+        setSort('');
         if (search.length === 0) {
             setSort('');
             setPage(0);
             return;
         }
+        dispatch(getPokemons({ search: search }));
     }
     const fetchNextPokemon = (sort) => {
         console.log("Fetching: ", page);
@@ -87,7 +96,7 @@ const CardListView = () => {
     useEffect(() => {
         const observer = new IntersectionObserver(
             (entries) => {
-                if (entries[0].isIntersecting && !isSearching) {
+                if (entries[0].isIntersecting && !isSearching && !loading) {
                     fetchNextPokemon(sort)
                 }
             },
@@ -103,7 +112,7 @@ const CardListView = () => {
                 observer.unobserve(loader.current);
             }
         };
-    }, [isSearching, sort]);
+    }, [isSearching, sort, loading]);
     useEffect(() => {
         if (page) {
             console.log("page: ", page);
@@ -111,13 +120,8 @@ const CardListView = () => {
         if (sort) {
             console.log("sort: ", sort);
         }
-        if (isSearching) {
-            dispatch(getPokemons({ search: search }))
-        }
-        else {
-            dispatch(getPokemons({ offset: page, sort: sort }))
-        }
 
+        dispatch(getPokemons({ search: search, offset: page, sort: sort }))
     }, [page, sort, isSearching])
     useEffect(() => {
         if (error) {
@@ -140,7 +144,7 @@ const CardListView = () => {
                 <div className="sticky top-0 z-10 w-full bg-gray-400 flex justify-between items-center p-4">
                     <div className="relative flex w-full gap-2 md:w-max">
                         <input type="text" name="search" value={search} placeholder="Search name or ID (e.g. Bulbasaur or 1) " id="search" className="min-w-[358px] h-8 border-2 rounded-lg p-2 pr-10" onChange={(e) => setSearch(e.target.value)} />
-                        {loading ? <Search className="h-6 w-6 !absolute right-1 top-1 rounded text-gray-700/30"  /> : <Search className="h-6 w-6 !absolute right-1 top-1 rounded text-gray-700/50 hover:text-gray-700 transition-all hover:cursor-pointer" onClick={handleSubmit} />}
+                        {loading ? <Search className="h-6 w-6 !absolute right-1 top-1 rounded text-gray-700/30" /> : <Search className="h-6 w-6 !absolute right-1 top-1 rounded text-gray-700/50 hover:text-gray-700 transition-all hover:cursor-pointer" onClick={handleSubmit} />}
                     </div>
                     <div className="flex gap-2">
                         <span className="font-semibold">Sort: </span>
@@ -157,7 +161,7 @@ const CardListView = () => {
                             <span className="absolute left-1/2 transform -translate-x-1/2 translate-y-20 bottom-full mb-2 w-max px-2 py-1 text-white text-sm bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity">Sort by Name (Desc)</span>
                         </div>
                         <div className="group relative inline-block">
-                            <ArrowUpAZ className="hover:bg-gray-600 hover:cursor-pointer hover:text-white rounded-md w-6 h-6" onClick={sortNameAsc}/>
+                            <ArrowUpAZ className="hover:bg-gray-600 hover:cursor-pointer hover:text-white rounded-md w-6 h-6" onClick={sortNameAsc} />
                             <span className="absolute left-1/2 transform -translate-x-1/2 translate-y-20 bottom-full mb-2 w-max px-2 py-1 text-white text-sm bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity">Sort by Name (Asc)</span>
                         </div>
 

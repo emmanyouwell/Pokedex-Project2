@@ -1,6 +1,7 @@
 const axios = require('axios');
 let nameDescPokemon = [];
 let nameAscPokemon = [];
+
 exports.getPokemon = async (req, res) => {
     try {
         const { offset, search, sort } = req.query;
@@ -14,7 +15,7 @@ exports.getPokemon = async (req, res) => {
             if (sort === "nameDesc" || sort === "nameAsc") {
                 url = `https://pokeapi.co/api/v2/pokemon/?limit=1025&offset=${offset}`;
             }
-            
+
             else {
                 url = `https://pokeapi.co/api/v2/pokemon/?limit=10&offset=${offset}`;
             }
@@ -27,7 +28,7 @@ exports.getPokemon = async (req, res) => {
         let details;
         let next;
         let previous;
-
+        
         if (search) {
             details = {
                 id: response.data.id,
@@ -111,16 +112,16 @@ exports.getPokemon = async (req, res) => {
 
                         })
                     )
-
-                    nameDescPokemon = details.sort((a, b) => b.name.localeCompare(a.name))
+                    nameDescPokemon = [...details].sort((a, b) => b.name.localeCompare(a.name))
                     const limit = 10;
                     const startIndex = (offset - 1) * limit;
                     const endIndex = offset * limit;
-                    details = nameDescPokemon.slice(startIndex, endIndex);
+                    details = details.sort((a, b) => b.name.localeCompare(a.name)).slice(startIndex, endIndex);
+                    
                 }
 
             }
-            else if (sort === "nameAsc"){
+            else if (sort === "nameAsc") {
                 if (nameAscPokemon.length > 0) {
                     const limit = 10;
                     const startIndex = (offset - 1) * limit;
@@ -148,12 +149,12 @@ exports.getPokemon = async (req, res) => {
 
                         })
                     )
-
-                    nameAscPokemon = details.sort((a, b) => a.name.localeCompare(b.name))
+                    nameAscPokemon = [...details].sort((a, b) => a.name.localeCompare(b.name));
                     const limit = 10;
                     const startIndex = (offset - 1) * limit;
                     const endIndex = offset * limit;
-                    details = nameAscPokemon.slice(startIndex, endIndex);
+                    details = details.sort((a, b) => a.name.localeCompare(b.name)).slice(startIndex, endIndex);
+                    
                 }
             }
         }
