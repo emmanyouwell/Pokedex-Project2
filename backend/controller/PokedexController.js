@@ -1,5 +1,6 @@
 const axios = require('axios');
-
+let nameDescPokemon = [];
+let nameAscPokemon = [];
 exports.getPokemon = async (req, res) => {
     try {
         const { offset, search, sort } = req.query;
@@ -10,13 +11,14 @@ exports.getPokemon = async (req, res) => {
             url = `https://pokeapi.co/api/v2/pokemon/${search}`;
         }
         if (sort) {
-            if (sort === "nameDesc"){
-                url = `https://pokeapi.co/api/v2/pokemon/?limit=1010&offset=${offset}`;    
+            if (sort === "nameDesc" || sort === "nameAsc") {
+                url = `https://pokeapi.co/api/v2/pokemon/?limit=1025&offset=${offset}`;
             }
+            
             else {
                 url = `https://pokeapi.co/api/v2/pokemon/?limit=10&offset=${offset}`;
             }
-            
+
         }
         const response = await axios.get(url);
         if (!response) {
@@ -25,6 +27,7 @@ exports.getPokemon = async (req, res) => {
         let details;
         let next;
         let previous;
+
         if (search) {
             details = {
                 id: response.data.id,
@@ -81,27 +84,77 @@ exports.getPokemon = async (req, res) => {
                 )
             }
             else if (sort === "nameDesc") {
-                if (response.data.previous) {
-                    const parsedURL = new URL(response.data.previous);
-                    previous = parsedURL.searchParams.get('offset');
+                if (nameDescPokemon.length > 0) {
+                    const limit = 10;
+                    const startIndex = (offset - 1) * limit;
+                    const endIndex = offset * limit;
+                    details = nameDescPokemon.slice(startIndex, endIndex);
                 }
-                details = await Promise.all(
-                    response.data.results.map(async (pokemon) => {
-                        try {
-                            const idAndType = await axios.get(pokemon.url);
-                            return {
-                                ...pokemon,
-                                id: idAndType.data.id,
-                                type: idAndType.data.types
+                else {
+                    if (response.data.previous) {
+                        const parsedURL = new URL(response.data.previous);
+                        previous = parsedURL.searchParams.get('offset');
+                    }
+                    details = await Promise.all(
+                        response.data.results.map(async (pokemon) => {
+                            try {
+                                const idAndType = await axios.get(pokemon.url);
+                                return {
+                                    ...pokemon,
+                                    id: idAndType.data.id,
+                                    type: idAndType.data.types
+                                }
+                            } catch (error) {
+                                console.error(`Error fetching details for ${pokemon.name}`, error);
+                                return { ...pokemon, id: null, type: null }
                             }
-                        } catch (error) {
-                            console.error(`Error fetching details for ${pokemon.name}`, error);
-                            return { ...pokemon, id: null, type: null }
-                        }
 
-                    })
-                )
-                details.sort((a, b) => b.name.localeCompare(a.name))
+                        })
+                    )
+
+                    nameDescPokemon = details.sort((a, b) => b.name.localeCompare(a.name))
+                    const limit = 10;
+                    const startIndex = (offset - 1) * limit;
+                    const endIndex = offset * limit;
+                    details = nameDescPokemon.slice(startIndex, endIndex);
+                }
+
+            }
+            else if (sort === "nameAsc"){
+                if (nameAscPokemon.length > 0) {
+                    const limit = 10;
+                    const startIndex = (offset - 1) * limit;
+                    const endIndex = offset * limit;
+                    details = nameAscPokemon.slice(startIndex, endIndex);
+                }
+                else {
+                    if (response.data.previous) {
+                        const parsedURL = new URL(response.data.previous);
+                        previous = parsedURL.searchParams.get('offset');
+                    }
+                    details = await Promise.all(
+                        response.data.results.map(async (pokemon) => {
+                            try {
+                                const idAndType = await axios.get(pokemon.url);
+                                return {
+                                    ...pokemon,
+                                    id: idAndType.data.id,
+                                    type: idAndType.data.types
+                                }
+                            } catch (error) {
+                                console.error(`Error fetching details for ${pokemon.name}`, error);
+                                return { ...pokemon, id: null, type: null }
+                            }
+
+                        })
+                    )
+
+                    nameAscPokemon = details.sort((a, b) => a.name.localeCompare(b.name))
+                    const limit = 10;
+                    const startIndex = (offset - 1) * limit;
+                    const endIndex = offset * limit;
+                    details = nameAscPokemon.slice(startIndex, endIndex);
+                }
             }
         }
         else {
@@ -136,7 +189,7 @@ exports.getPokemon = async (req, res) => {
             next,
             previous,
             count: response.data.count,
-            pokemon: details
+            pokemon: details,
         });
     } catch (error) {
         console.error(error);
