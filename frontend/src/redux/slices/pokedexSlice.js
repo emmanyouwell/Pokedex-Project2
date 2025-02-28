@@ -6,8 +6,6 @@ export const pokedexSlice = createSlice({
         pokemons: [],
         loading: false,
         error: null,
-        offset: 0,
-        next: 0,
         count: 0,
         pokemonDetails: {},
     },
@@ -26,7 +24,6 @@ export const pokedexSlice = createSlice({
             .addCase(getPokemons.fulfilled, (state, action) => {
                 state.loading = false;
                 state.pokemons = action.payload.pokemon;
-                state.next = action.payload.next;
                 state.count = action.payload.count;
                 
             })

@@ -1,7 +1,7 @@
-import React,{ useState } from "react";
-import Card from "./components/Card";
+import React from "react";
+
 import CardListView from "./components/CardListView";
-import {ToastContainer} from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
@@ -9,10 +9,10 @@ function App() {
     <>
       <h1 className="text-3xl font-bold underline text-center">Pokedex</h1>
       <div className="flex justify-center items-center p-8">
-      <CardListView/>
+        <CardListView />
       </div>
-      
-      <ToastContainer/>
+
+      <ToastContainer />
     </>
   );
 }

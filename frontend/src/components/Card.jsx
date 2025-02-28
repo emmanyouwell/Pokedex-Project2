@@ -1,6 +1,6 @@
 import React from 'react'
 import { Info, Eye } from 'lucide-react'
-const Card = ({id, name, type, img}) => {
+const Card = ({id, name, type, url}) => {
     const formatNumber = (num) => num.toString().padStart(3, "0");
     return (
         <div className="flex flex-col gap-2 bg-white h-96 w-64 p-4 rounded-lg shadow-lg border-8 border-gray-300">
