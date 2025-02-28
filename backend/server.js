@@ -48,5 +48,5 @@ async function fetchPokemons() {
 
 //start server after fetching pokemons
 fetchPokemons().then(()=>app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+    console.log(`Server running on ${PORT}`);
 }));
