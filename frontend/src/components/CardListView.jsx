@@ -50,6 +50,7 @@ const CardListView = () => {
         if (idMin > 0 && idMax <= 1025) {
             setMin(idMin);
             setMax(idMax);
+
             setPage(1);
             setNameMin('');
             setNameMax('');
@@ -68,6 +69,7 @@ const CardListView = () => {
                 toast.error("Start name should be less than or equal to the end name.", { position: "bottom-right" });
                 return;
             }
+
             setPage(1);
             setIdMin(1);
             setIdMax(1025);
@@ -114,6 +116,7 @@ const CardListView = () => {
     //submit search query
     const handleSubmit = () => {
         setIsSearching(search.length > 0);
+        setPage(1);
         setTerm(search);
         if (search.length === 0) {
             setSort('');
@@ -156,10 +159,12 @@ const CardListView = () => {
                 observer.unobserve(loader.current);
             }
         };
-    }, [isSearching, sort, loading]);
+    }, [isSearching, sort, loading, pokemonList]);
 
     useEffect(() => { //main useEffect to fetch pokemons
-        setPokemonList([]);
+        if (page === 1) { //if sort, search or filter is applied, reset pokemon list
+            setPokemonList([])
+        }
         dispatch(getPokemons({ search: term, offset: page, sort: sort, min, max }))
     }, [page, sort, min, max, term]);
 
