@@ -1,5 +1,6 @@
 import React from 'react'
 import { Info, Eye } from 'lucide-react'
+import { Link } from 'react-router-dom'
 const Card = ({id, name, type, url}) => {
     const formatNumber = (num) => num.toString().padStart(3, "0");
     return (
@@ -14,13 +15,14 @@ const Card = ({id, name, type, url}) => {
                 <p className="font-medium text-blue-500 uppercase">{name}</p>
                 <p>Type: {type && type.length > 0 && type.map((item)=>(item.type.name)).join(' | ')}</p>
             </div>
+            <Link to={`/pokemon/${id}`}>
             <div className="relative flex justify-center items-center gap-2 group transition-all hover:cursor-pointer">
                 <span className="text-md font-medium text-slate-400 opacity-0 group-hover:opacity-100 group-hover:-translate-x-4 transition-all">View details</span>
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-max text-slate-400 group-hover:text-blue-500 group-hover:translate-x-8 transition-all">
                     <Eye className="h-8 w-8"/>
                 </div>
-
             </div>
+            </Link>
         </div>
     )
 }

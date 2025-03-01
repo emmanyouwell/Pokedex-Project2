@@ -5,7 +5,14 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        holtwood: ["Holtwood One SC", "serif"],
+        dm: ["DM Serif Text", "serif"],
+        parkinsans: ["Parkinsans", "serif"],
+        inter: ["Inter", "sans-serif"],
+      }
+    },
   },
   plugins: [],
 }

@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getPokemons } from '../actions/pokedexAction';
+import { getPokemons, getSinglePokemon } from '../actions/pokedexAction';
 export const pokedexSlice = createSlice({
     name: 'donor',
     initialState: {
@@ -19,7 +19,7 @@ export const pokedexSlice = createSlice({
 
             .addCase(getPokemons.pending, (state, action) => {
                 state.loading = true;
-                state.next = 0;
+                
             })
             .addCase(getPokemons.fulfilled, (state, action) => {
                 state.loading = false;
@@ -32,6 +32,17 @@ export const pokedexSlice = createSlice({
                 state.error = action.payload;
             })
 
+            .addCase(getSinglePokemon.pending, (state, action) => {
+                state.loading = true;
+            })
+            .addCase(getSinglePokemon.fulfilled, (state, action) => {
+                state.loading = false;
+                state.pokemonDetails = action.payload.pokemon
+            })
+            .addCase(getSinglePokemon.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+            })
 
 
     },

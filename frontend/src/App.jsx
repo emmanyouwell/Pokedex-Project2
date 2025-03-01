@@ -3,14 +3,20 @@ import React from "react";
 import CardListView from "./components/CardListView";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import 'aos/dist/aos.css';
+import {BrowserRouter, Routes, Route} from 'react-router-dom';
+import Home from "./Pages/Home";
+import SinglePokemon from "./Pages/SinglePokemon";
 function App() {
   return (
     <>
-      <h1 className="text-3xl font-bold underline text-center">Pokedex</h1>
-      <div className="flex justify-center items-center p-8">
-        <CardListView />
-      </div>
+     <BrowserRouter>
+     <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/pokemon/:id" element={<SinglePokemon />} />
+     </Routes>
+     
+     </BrowserRouter>
 
       <ToastContainer />
     </>

@@ -11,12 +11,14 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.6.0",
+    "aos": "^2.3.4",
     "axios": "^1.8.1",
     "lucide-react": "^0.476.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-infinite-scroll-component": "^6.1.0",
     "react-redux": "^9.2.0",
+    "react-router-dom": "^7.2.0",
     "react-toastify": "^11.0.5"
   },
   "devDependencies": {

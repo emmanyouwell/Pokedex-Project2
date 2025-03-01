@@ -1,5 +1,6 @@
 const pokemonCache = require('../pokemonCache');
-
+const weaknesses = require('../data/weaknesses.json')
+const axios = require('axios');
 
 exports.getPokemon = async (req, res) => {
     try {
@@ -70,7 +71,7 @@ exports.getPokemon = async (req, res) => {
 
         const count = results.length;
         results = results.slice(startIndex, endIndex); //returns 10 pokemons per page
-        
+
         if (results.length === 0) {
             res.status(404).json({ error: 'Pokemon Not Found' });
             return;
@@ -79,6 +80,52 @@ exports.getPokemon = async (req, res) => {
             success: true,
             count,
             pokemon: results,
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: error.message });
+    }
+}
+
+
+exports.getSinglePokemon = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const details = pokemonCache.getData();
+        const pokemon = details.find(pokemon => pokemon.id === parseInt(id));
+
+        if (!pokemon) {
+            res.status(404).json({ error: 'Pokemon Not Found' });
+            return;
+        }
+        const response = await axios.get(pokemon.url);
+        if (!response) {
+            res.status(404).json({ error: 'Url Not Found' });
+            return;
+        }
+
+        const weakness = response.data.types.flatMap(type => {
+            const formattedType = type.type.name.charAt(0).toUpperCase() + type.type.name.slice(1).toLowerCase(); // Normalize input
+            return weaknesses[formattedType] || []; // Return array directly
+        });
+        
+        // Remove duplicates
+        const uniqueWeaknesses = [...new Set(weakness)];
+
+        let info = {
+            id: response.data.id,
+            name: response.data.name,
+            height: response.data.height/10,
+            weight: response.data.weight/10,
+            types: response.data.types,
+            stats: response.data.stats,
+            weakness: uniqueWeaknesses
+        }
+
+
+        res.status(200).json({
+            success: true,
+            pokemon: info
         });
     } catch (error) {
         console.error(error);

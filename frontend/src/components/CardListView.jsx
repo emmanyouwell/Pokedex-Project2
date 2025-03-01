@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getPokemons } from '../redux/actions/pokedexAction'
 import { clearError } from '../redux/slices/pokedexSlice'
 import { toast } from 'react-toastify'
+import Loader from './Loader'
 
 const CardListView = () => {
     const loader = useRef(null);
@@ -166,7 +167,7 @@ const CardListView = () => {
             setPokemonList([])
         }
         dispatch(getPokemons({ search: term, offset: page, sort: sort, min, max }))
-    }, [page, sort, min, max, term]);
+    }, [dispatch, page, sort, min, max, term]);
 
     useEffect(() => { //clear redux errors states
         if (error) {
@@ -296,9 +297,7 @@ const CardListView = () => {
 
                 {/* loader */}
                 <div className="flex justify-center items-center" ref={loader}>
-                    {loading && <div
-                        className="w-10 h-10 border-4 border-t-blue-500 border-gray-300 rounded-full animate-spin"
-                    ></div>}
+                    {loading && <Loader/>}
                 </div>
 
             </div>

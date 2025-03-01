@@ -34,5 +34,18 @@ export const getPokemons = createAsyncThunk(
     }
 );
 
+export const getSinglePokemon = createAsyncThunk(
+    'pokedex/getSinglePokemon',
+    async (id, thunkAPI) => {
+        try {
+            const response = await axios.get(`${VITE_APP_URL}/api/v1/pokemon/${id}`);
+            return response.data;
+        } catch (error) {
+            toast.error(error.response.data.error, {position: "bottom-right"});
+            return thunkAPI.rejectWithValue(error.response.data.error);
+        }
+    }
+);
+
 
 
