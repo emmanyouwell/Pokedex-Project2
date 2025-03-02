@@ -42,7 +42,7 @@ const SinglePokemon = () => {
               <p className='font-parkinsans text-white' style={{ textShadow: "2px 2px 4px rgba(0, 0, 0, 0.5)" }}>#{pokemonDetails.id}</p>
 
               <div className="flex items-center justify-around p-4 w-full h-full">
-                <Link to={`/pokemon/${parseInt(id) - 1}`}>
+                <Link to={id > 2 ? `/pokemon/${parseInt(id) - 1}` : `/pokemon/${parseInt(id)}`} >
                   <ArrowLeft className="h-10 w-10 lg:h-20 lg:w-20 hover:bg-slate-100/50 rounded-lg text-white cursor-pointer" />
                 </Link>
                 <div style={{ height: "400px", display: "flex", justifyContent: "center", alignItems: "center" }}>
@@ -66,7 +66,7 @@ const SinglePokemon = () => {
 
 
 
-                <Link to={`/pokemon/${parseInt(id) + 1}`}>
+                <Link to={id < 1025 ? `/pokemon/${parseInt(id) + 1}` : `/pokemon/${parseInt(id)}`} >
                   <ArrowRight className="h-10 w-10 lg:h-20 lg:w-20 hover:bg-slate-100/50 rounded-lg text-white cursor-pointer" />
                 </Link>
               </div>
