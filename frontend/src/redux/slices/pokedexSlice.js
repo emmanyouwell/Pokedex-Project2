@@ -38,6 +38,7 @@ export const pokedexSlice = createSlice({
             .addCase(getSinglePokemon.fulfilled, (state, action) => {
                 state.loading = false;
                 state.pokemonDetails = action.payload.pokemon
+                state.pokemons = [];
             })
             .addCase(getSinglePokemon.rejected, (state, action) => {
                 state.loading = false;

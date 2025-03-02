@@ -34,16 +34,16 @@ const SinglePokemon = () => {
       {loading && imageLoaded ? <div className="w-full h-screen flex items-center justify-center "><Loader /></div> : error ? <h1>{error}</h1> :
         <>
           <Link to="/">
-            <HomeIcon className="absolute h-20 w-20 top-4 left-4 text-white hover:cursor-pointer hover:bg-slate-100/50 z-20 p-4 rounded-lg" />
+            <HomeIcon className="absolute h-10 w-10 lg:h-16 lg:w-16 lg:p-4 top-4 left-4 text-white hover:cursor-pointer hover:bg-slate-100/50 z-20  rounded-lg" />
           </Link>
           <div className="flex flex-col">
             <div className="flex flex-col items-center justify-center relative">
               <h1 className="text-[2.5rem] font-parkinsans font-bold text-white mt-4" style={{ textShadow: "2px 2px 4px rgba(0, 0, 0, 0.5)" }}>{pokemonDetails.name && formattedName(pokemonDetails.name)}</h1>
               <p className='font-parkinsans text-white' style={{ textShadow: "2px 2px 4px rgba(0, 0, 0, 0.5)" }}>#{pokemonDetails.id}</p>
 
-              <div className="flex items-center justify-around w-full h-full">
+              <div className="flex items-center justify-around p-4 w-full h-full">
                 <Link to={`/pokemon/${parseInt(id) - 1}`}>
-                  <ArrowLeft className="h-20 w-20 hover:bg-slate-100/50 rounded-lg text-white cursor-pointer" />
+                  <ArrowLeft className="h-10 w-10 lg:h-20 lg:w-20 hover:bg-slate-100/50 rounded-lg text-white cursor-pointer" />
                 </Link>
                 <div style={{ height: "400px", display: "flex", justifyContent: "center", alignItems: "center" }}>
                   {!imageLoaded && <div className="w-full h-full flex items-center justify-center"><Loader /></div>}
@@ -67,7 +67,7 @@ const SinglePokemon = () => {
 
 
                 <Link to={`/pokemon/${parseInt(id) + 1}`}>
-                  <ArrowRight className="h-20 w-20 hover:bg-slate-100/50 rounded-lg text-white cursor-pointer" />
+                  <ArrowRight className="h-10 w-10 lg:h-20 lg:w-20 hover:bg-slate-100/50 rounded-lg text-white cursor-pointer" />
                 </Link>
               </div>
 
@@ -87,9 +87,9 @@ const SinglePokemon = () => {
 
 
               <div className="flex items-center justify-between gap-4">
-                <h3 className="font-parkinsans">Weight: {pokemonDetails.weight} m</h3>
+                <h3 className="font-parkinsans">Weight: {pokemonDetails.weight} kg</h3>
                 <span> | </span>
-                <h3 className="font-parkinsans">Height: {pokemonDetails.height} kg</h3>
+                <h3 className="font-parkinsans">Height: {pokemonDetails.height} m</h3>
               </div>
 
               <div className="w-full lg:w-[50%] transition-all">
@@ -110,10 +110,10 @@ const SinglePokemon = () => {
               <div className="font-parkinsans">
                 Weaknesses:
               </div>
-              <div className="flex items-center justify-center">
-                {pokemonDetails.weakness && pokemonDetails.weakness.length > 0 && pokemonDetails.weakness.map((weakness, index) => (<><span key={index} className="font-parkinsans text-lg" style={{ color: colorType[weakness], textShadow: "1px 1px 1px rgba(0, 0, 0, 0.5)" }}>
+              <div className="flex flex-wrap justify-center gap-4">
+                {pokemonDetails.weakness && pokemonDetails.weakness.length > 0 && pokemonDetails.weakness.map((weakness, index) => (<><span key={index} className="font-parkinsans text-lg text-center" style={{ color: colorType[weakness], textShadow: "1px 1px 1px rgba(0, 0, 0, 0.5)" }}>
                   {weakness}
-                </span><span className="mx-2">{index !== pokemonDetails.weakness.length - 1 && " | "}</span></>))}
+                </span></>))}
               </div>
 
             </div>
