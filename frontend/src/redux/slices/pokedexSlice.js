@@ -17,7 +17,7 @@ export const pokedexSlice = createSlice({
     extraReducers: (builder) => {
         builder
 
-            .addCase(getPokemons.pending, (state, action) => {
+            .addCase(getPokemons.pending, (state) => {
                 state.loading = true;
                 
             })
@@ -32,7 +32,7 @@ export const pokedexSlice = createSlice({
                 state.error = action.payload;
             })
 
-            .addCase(getSinglePokemon.pending, (state, action) => {
+            .addCase(getSinglePokemon.pending, (state) => {
                 state.loading = true;
             })
             .addCase(getSinglePokemon.fulfilled, (state, action) => {

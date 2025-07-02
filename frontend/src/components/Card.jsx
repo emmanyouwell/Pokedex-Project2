@@ -1,7 +1,8 @@
 import React from 'react'
-import { Info, Eye } from 'lucide-react'
+import { Eye } from 'lucide-react'
 import { Link } from 'react-router-dom'
-const Card = ({id, name, type, url}) => {
+import PropTypes from 'prop-types'
+const Card = ({id, name, type}) => {
     const formatNumber = (num) => num.toString().padStart(3, "0");
     return (
         <div className="flex flex-col gap-2 bg-white h-96 w-64 p-4 rounded-lg shadow-lg border-8 border-gray-300">
@@ -26,5 +27,9 @@ const Card = ({id, name, type, url}) => {
         </div>
     )
 }
-
+Card.propTypes = {
+    id: PropTypes.number,
+    name: PropTypes.string,
+    type: PropTypes.array,
+}
 export default Card
