@@ -314,8 +314,8 @@ const CardListView = () => {
             {/* Custom card view list and card components */}
             <div className="flex justify-center items-center">
                 <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4" >
-                    {pokemonList && pokemonList.length > 0 && pokemonList.map((item) => (
-                        <Card key={item.id} id={item.id} name={item.name} type={item.type} />
+                    {pokemonList && pokemonList.length > 0 && pokemonList.map((item, index) => (
+                        <Card key={`${index}_${item.id}_${item.name}`} id={item.id} name={item.name} type={item.type} />
                     ))}
                     {pokemonList && pokemonList.length === 0 && !loading && <p>No pokemons</p>}
                 </div>
