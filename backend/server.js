@@ -9,9 +9,20 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
+const AppError = require('./utils/AppError');
+const globalErrorHandler = require('./middleware/errorHandler');
+
 //routes for pokedex
 const pokedex = require('./routes/PokedexRoute')
 app.use('/api/v1', pokedex)
+
+// Handle undefined routes
+app.all('*', (req, res, next) => {
+    next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
+});
+
+// Global Error Handling Middleware
+app.use(globalErrorHandler);
 
 //start server after fetching basic list
 pokemonCache.fetchBasicList().then(() => {
