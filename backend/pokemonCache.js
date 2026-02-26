@@ -3,6 +3,10 @@ const axios = require('axios');
 let basicList = []; // Stores { id, name, url }
 let detailsCache = {}; // Stores details by pokemon id
 let lastCount = 0;
+let lastRefreshTime = 0;
+
+// Set TTL to 24 hours (in milliseconds)
+const CACHE_TTL = 24 * 60 * 60 * 1000;
 
 const fetchBasicList = async () => {
     try {
@@ -20,6 +24,7 @@ const fetchBasicList = async () => {
             };
         });
         lastCount = response.data.count;
+        lastRefreshTime = Date.now();
         console.log(`Basic list loaded successfully! ✅ Count: ${lastCount}`);
     } catch (err) {
         console.error("Error fetching basic list", err);
@@ -29,9 +34,12 @@ const fetchBasicList = async () => {
 const checkForUpdatesInBackground = () => {
     setInterval(async () => {
         try {
+            const timeSinceLastRefresh = Date.now() - lastRefreshTime;
             const response = await axios.get("https://pokeapi.co/api/v2/pokemon?limit=1");
-            if (response.data.count > lastCount) {
-                console.log(`New Pokémon detected! Previous count: ${lastCount}, New Count: ${response.data.count}. Refreshing list...`);
+
+            // Refresh if count changed, OR if 24 hours have passed since last refresh
+            if (response.data.count > lastCount || timeSinceLastRefresh >= CACHE_TTL) {
+                console.log(`Pokémon basic list update triggered. Count changed or TTL expired. Refreshing...`);
                 await fetchBasicList();
             }
         } catch (error) {
@@ -45,7 +53,22 @@ module.exports = {
     checkForUpdatesInBackground,
     getBasicList: () => basicList,
     setPokemonDetails: (id, data) => {
-        detailsCache[id] = data;
+        detailsCache[id] = {
+            data: data,
+            timestamp: Date.now()
+        };
     },
-    getPokemonDetails: (id) => detailsCache[id],
+    getPokemonDetails: (id) => {
+        const cached = detailsCache[id];
+        if (!cached) return null;
+
+        const isExpired = Date.now() - cached.timestamp >= CACHE_TTL;
+        if (isExpired) {
+            // Delete expired cache to guarantee fresh fetch
+            delete detailsCache[id];
+            return null;
+        }
+
+        return cached.data;
+    },
 };
