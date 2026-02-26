@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { getPokemons, getSinglePokemon } from '../actions/pokedexAction';
 export const pokedexSlice = createSlice({
-    name: 'donor',
+    name: 'pokedex',
     initialState: {
         pokemons: [],
         loading: false,
