@@ -200,18 +200,18 @@ const CardListView = () => {
 
     return (
         <div className='flex flex-col w-full gap-4 min-h-screen' onScroll={fetchNextPokemon}>
-            <div className="sticky top-0 z-10 w-full bg-gray-400 flex flex-col lg:flex-row gap-4 justify-center items-center p-4">
-                <div className="flex flex-col lg:flex-row justify-center items-center gap-4 w-max">
+            <div className="sticky top-0 z-10 w-full bg-gray-400 flex flex-wrap gap-4 justify-center items-center p-4">
+                <div className="flex flex-wrap justify-center items-center gap-4 w-full xl:w-auto">
 
                     {/* search input */}
-                    <div className="relative flex w-max gap-2 md:w-max">
-                        <input type="text" name="search" value={search} placeholder="Search name or ID (e.g. Bulbasaur or 1) " id="search" className="max-w-[358px] lg:min-w-[358px] h-8 border-2 border-gray-800 rounded-lg p-4 pr-10" onChange={(e) => setSearch(e.target.value)} />
+                    <div className="relative flex w-full md:w-auto gap-2 shrink-0">
+                        <input type="text" name="search" value={search} placeholder="Search name or ID (e.g. Bulbasaur or 1) " id="search" className="w-full md:w-[358px] h-8 border-2 border-gray-800 rounded-lg p-4 pr-10" onChange={(e) => setSearch(e.target.value)} />
                         {loading ? <Search className="h-6 w-6 !absolute right-1 top-1 rounded text-gray-700/30" /> : <Search className="h-6 w-6 !absolute right-1 top-1 rounded text-gray-700/50 hover:text-gray-700 transition-all hover:cursor-pointer" onClick={handleSubmit} />}
                     </div>
 
-                    <div className="flex items-center justify-center gap-4">
+                    <div className="flex flex-wrap items-center justify-center gap-4 shrink-0">
                         {/* sort input */}
-                        <div className="flex items-center justify-center gap-2 border-2 border-gray-800 rounded-lg p-2">
+                        <div className="flex flex-nowrap shrink-0 items-center justify-center gap-2 border-2 border-gray-800 rounded-lg p-2">
                             <span className="font-semibold">Sort: </span>
                             <div className="group relative inline-block">
                                 {sort === 'idDesc' ? <ArrowDown10 className="bg-gray-600 hover:cursor-pointer text-white rounded-md w-6 h-6" onClick={sortIDDesc} /> : <ArrowDown10 className="hover:bg-gray-600 hover:cursor-pointer hover:text-white rounded-md w-6 h-6" onClick={sortIDDesc} />}
@@ -233,13 +233,13 @@ const CardListView = () => {
                         </div>
 
                         {/* filter input */}
-                        {!show && <div className="group relative inline-block">
-                            <button className="bg-gray-800 text-white rounded-lg p-2 hover:bg-gray-600" onClick={() => setShow(!show)}><Filter /></button>
+                        {!show && <div className="group relative inline-block shrink-0">
+                            <button className="bg-gray-800 text-white rounded-lg p-2 hover:bg-gray-600 cursor-pointer" onClick={() => setShow(!show)}><Filter /></button>
                             <span className="absolute hidden group-hover:inline-block left-1/2 transform -translate-x-1/2 translate-y-28 lg:translate-y-20 bottom-full mb-2  max-w-xs whitespace-normal lg:w-max px-2 py-1 text-white text-sm bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity">More Filters</span>
                         </div>}
                         {/* reset filters */}
-                        {!show && <div className="group relative inline-block">
-                            <div className="bg-red-600 text-white rounded-lg p-2 hover:bg-red-800 h-full border-2 border-gray-800" onClick={resetFilters} onKeyDown={(e) => {
+                        {!show && <div className="group relative inline-block shrink-0">
+                            <div className="bg-red-600 text-white rounded-lg p-2 hover:bg-red-800 h-full border-2 border-gray-800 cursor-pointer" onClick={resetFilters} onKeyDown={(e) => {
                                 if (e.key === 'Enter' || e.key === ' ') {
                                     e.preventDefault(); // Prevent page scroll on Space
                                     resetFilters();
@@ -252,30 +252,30 @@ const CardListView = () => {
 
                 </div>
 
-                <div className="flex flex-col lg:flex-row justify-center items-center gap-4">
+                <div className="flex flex-wrap justify-center items-center gap-4">
                     {/* Filter by ID and Name inputs */}
-                    <div className="flex flex-col lg:flex-row items-center justify-center gap-2">
+                    <div className="flex flex-wrap items-center justify-center gap-2">
 
                         {show && <>
-                            <div className="relative flex flex-col lg:grid lg:grid-cols-2 w-full gap-2">
+                            <div className="relative flex flex-wrap justify-center items-center w-full gap-2">
                                 {/* Filter by ID */}
-                                <div className="flex flex-col lg:flex-row items-center justify-center gap-4 border-2 w-full border-gray-800 rounded-lg p-2">
+                                <div className="flex flex-wrap items-center justify-center gap-4 border-2 border-gray-800 rounded-lg p-2 shrink-0">
                                     <div className='flex items-center justify-center gap-2'>
                                         <span className="font-semibold">Min: </span>
-                                        <input type="text" name="id_min" value={idMin} placeholder="0" id="idMin" className="max-w-[100px] h-8 border-2 rounded-lg p-2 pr-10" onChange={(e) => setIdMin(e.target.value)} />
+                                        <input type="text" name="id_min" value={idMin} placeholder="0" id="idMin" className="w-[80px] h-8 border-2 rounded-lg p-2" onChange={(e) => setIdMin(e.target.value)} />
                                     </div>
                                     <div className='flex items-center justify-center gap-2'>
                                         <span className="font-semibold">Max: </span>
-                                        <input type="text" name="id_max" value={idMax} placeholder="1025" id="idMax" className="max-w-[100px] h-8 border-2 rounded-lg p-2 pr-10" onChange={(e) => setIdMax(e.target.value)} />
+                                        <input type="text" name="id_max" value={idMax} placeholder="1025" id="idMax" className="w-[80px] h-8 border-2 rounded-lg p-2" onChange={(e) => setIdMax(e.target.value)} />
                                     </div>
-                                    <button className="bg-gray-800 text-white rounded-lg p-2 hover:bg-gray-600" onClick={filterByID}>Filter by ID</button>
+                                    <button className="bg-gray-800 text-white rounded-lg p-2 hover:bg-gray-600 shrink-0 cursor-pointer" onClick={filterByID}>Filter by ID</button>
                                 </div>
 
                                 {/* Filter by Name */}
-                                <div className="flex flex-col w-full lg:flex-row items-center justify-center gap-4 border-2 border-gray-800 rounded-lg p-2 ">
+                                <div className="flex flex-wrap items-center justify-center gap-4 border-2 border-gray-800 rounded-lg p-2 shrink-0">
                                     <div className='flex items-center justify-center gap-2'>
                                         <span className="font-semibold">Min: </span>
-                                        <input type="text" maxLength={1} pattern="[A-Za-z]" name="name_min" value={nameMin} placeholder="A" id="nameMin" className="max-w-[100px] h-8 border-2 rounded-lg p-2 pr-10" onChange={(e) => {
+                                        <input type="text" maxLength={1} pattern="[A-Za-z]" name="name_min" value={nameMin} placeholder="A" id="nameMin" className="w-[80px] h-8 border-2 rounded-lg p-2" onChange={(e) => {
                                             const inputValue = e.target.value.toUpperCase();
                                             if (/^[A-Za-z]?$/.test(inputValue)) {
                                                 setNameMin(inputValue);
@@ -284,20 +284,20 @@ const CardListView = () => {
                                     </div>
                                     <div className='flex items-center justify-center gap-2'>
                                         <span className="font-semibold">Max: </span>
-                                        <input type="text" maxLength={1} pattern="[A-Za-z]" name="name_max" value={nameMax} placeholder="Z" id="nameMax" className="max-w-[100px] h-8 border-2 rounded-lg p-2 pr-10" onChange={(e) => {
+                                        <input type="text" maxLength={1} pattern="[A-Za-z]" name="name_max" value={nameMax} placeholder="Z" id="nameMax" className="w-[80px] h-8 border-2 rounded-lg p-2" onChange={(e) => {
                                             const inputValue = e.target.value.toUpperCase();
                                             if (/^[A-Za-z]?$/.test(inputValue)) {
                                                 setNameMax(inputValue);
                                             }
                                         }} />
                                     </div>
-                                    <button className="bg-gray-800 text-white lg:text-sm rounded-lg p-2 hover:bg-gray-600" onClick={filterByName}>Filter by Name</button>
+                                    <button className="bg-gray-800 text-white lg:text-sm rounded-lg p-2 hover:bg-gray-600 shrink-0 cursor-pointer" onClick={filterByName}>Filter by Name</button>
                                 </div>
                             </div>
                             {/* Reset and Minimize Buttons */}
-                            <div className="flex items-center justify-center gap-4 w-max">
+                            <div className="flex items-center justify-center gap-4 shrink-0">
                                 <div className="group relative inline-block">
-                                    <div className="bg-red-600 text-white rounded-lg p-2 hover:bg-red-800 h-full border-2 border-gray-800" onClick={resetFilters} onKeyDown={(e) => {
+                                    <div className="bg-red-600 text-white rounded-lg p-2 hover:bg-red-800 h-full border-2 border-gray-800 cursor-pointer" onClick={resetFilters} onKeyDown={(e) => {
                                         if (e.key === 'Enter' || e.key === ' ') {
                                             e.preventDefault(); // Prevent page scroll on Space
                                             resetFilters();
@@ -307,7 +307,7 @@ const CardListView = () => {
                                     <span className="absolute hidden group-hover:inline-block left-1/2 transform -translate-x-1/2 translate-y-20 bottom-full mb-2 w-max px-2 py-1 text-white text-sm bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity">Reset Filters</span>
                                 </div>
                                 <div className="group relative inline-block">
-                                    <div className="bg-gray-600 text-white rounded-lg p-2 hover:bg-gray-800 h-full border-2 border-gray-800" onClick={() => setShow(false)} onKeyDown={(e) => {
+                                    <div className="bg-gray-600 text-white rounded-lg p-2 hover:bg-gray-800 h-full border-2 border-gray-800 cursor-pointer" onClick={() => setShow(false)} onKeyDown={(e) => {
                                         if (e.key === 'Enter' || e.key === ' ') {
                                             e.preventDefault(); // Prevent page scroll on Space
                                             setShow(false);
