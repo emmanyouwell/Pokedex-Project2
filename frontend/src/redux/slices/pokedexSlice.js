@@ -12,6 +12,10 @@ export const pokedexSlice = createSlice({
     reducers: {
         clearError: (state) => {
             state.error = null;
+        },
+        setCachedPokemons: (state, action) => {
+            state.pokemons = action.payload.pokemon;
+            state.count = action.payload.count;
         }
     },
     extraReducers: (builder) => {
@@ -19,13 +23,13 @@ export const pokedexSlice = createSlice({
 
             .addCase(getPokemons.pending, (state) => {
                 state.loading = true;
-                
+
             })
             .addCase(getPokemons.fulfilled, (state, action) => {
                 state.loading = false;
                 state.pokemons = action.payload.pokemon;
                 state.count = action.payload.count;
-                
+
             })
             .addCase(getPokemons.rejected, (state, action) => {
                 state.loading = false;
@@ -48,5 +52,5 @@ export const pokedexSlice = createSlice({
 
     },
 });
-export const {clearError} = pokedexSlice.actions;
+export const { clearError, setCachedPokemons } = pokedexSlice.actions;
 export default pokedexSlice.reducer;

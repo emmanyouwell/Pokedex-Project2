@@ -179,10 +179,21 @@ const CardListView = () => {
     useEffect(() => { //set pokemons to local state to display
 
         if (pokemons && pokemons.length > 0) {
-            setPokemonList((prevPokemons) => [...prevPokemons, ...pokemons])
+            setPokemonList((prevPokemons) => {
+                const newList = [...prevPokemons];
+                pokemons.forEach(newPoke => {
+                    const idx = newList.findIndex(p => p.id === newPoke.id);
+                    if (idx !== -1) {
+                        newList[idx] = newPoke; // Replace stale with fresh
+                    } else {
+                        newList.push(newPoke); // Append new
+                    }
+                });
+                return newList;
+            });
         }
         else if (search) {
-            setPokemonList([pokemons])
+            setPokemonList(Array.isArray(pokemons) ? pokemons : [pokemons])
         }
     }, [pokemons, search])
 

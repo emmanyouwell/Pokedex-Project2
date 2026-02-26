@@ -7,8 +7,7 @@ exports.getPokemon = async (req, res) => {
 
         const { offset, search, sort, min, max } = req.query;
 
-        let details = pokemonCache.getData();
-        let results = [...details];
+        let results = [...pokemonCache.getBasicList()];
 
         //pagination
         const limit = 10;
@@ -76,10 +75,34 @@ exports.getPokemon = async (req, res) => {
             res.status(404).json({ error: 'Pokemon Not Found' });
             return;
         }
+
+        // Now we fetch details for the paginated slice
+        const details = await Promise.all(
+            results.map(async (pokemon) => {
+                const cachedDetail = pokemonCache.getPokemonDetails(pokemon.id);
+                if (cachedDetail) {
+                    return cachedDetail;
+                }
+
+                try {
+                    const idAndType = await axios.get(pokemon.url);
+                    const pokeData = {
+                        ...pokemon,
+                        type: idAndType.data.types
+                    };
+                    pokemonCache.setPokemonDetails(pokemon.id, pokeData);
+                    return pokeData;
+                } catch (error) {
+                    console.error(`Error fetching details for ${pokemon.name}`, error);
+                    return { ...pokemon, type: null };
+                }
+            })
+        );
+
         res.status(200).json({
             success: true,
             count,
-            pokemon: results,
+            pokemon: details,
         });
     } catch (error) {
         console.error(error);
@@ -91,8 +114,8 @@ exports.getPokemon = async (req, res) => {
 exports.getSinglePokemon = async (req, res) => {
     try {
         const { id } = req.params;
-        const details = pokemonCache.getData();
-        const pokemon = details.find(pokemon => pokemon.id === parseInt(id));
+        const basicList = pokemonCache.getBasicList();
+        const pokemon = basicList.find(pokemon => pokemon.id === parseInt(id));
 
         if (!pokemon) {
             res.status(404).json({ error: 'Pokemon Not Found' });
@@ -108,15 +131,15 @@ exports.getSinglePokemon = async (req, res) => {
             const formattedType = type.type.name.charAt(0).toUpperCase() + type.type.name.slice(1).toLowerCase(); // Normalize input
             return weaknesses[formattedType] || []; // Return array directly
         });
-        
+
         // Remove duplicates
         const uniqueWeaknesses = [...new Set(weakness)];
 
         let info = {
             id: response.data.id,
             name: response.data.name,
-            height: response.data.height/10,
-            weight: response.data.weight/10,
+            height: response.data.height / 10,
+            weight: response.data.weight / 10,
             types: response.data.types,
             stats: response.data.stats,
             weakness: uniqueWeaknesses

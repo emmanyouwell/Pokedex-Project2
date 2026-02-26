@@ -56,7 +56,12 @@ const SinglePokemon = () => {
                 src={`https://assets.pokemon.com/assets/cms2/img/pokedex/full/${formatNumber(id)}.png`}
                 alt={pokemonDetails.name}
                 onLoad={() => setImageLoaded(true)}
-                onError={() => setImageError(true)}
+                onError={(e) => {
+                  setImageError(true);
+                  setImageLoaded(true);
+                  e.target.onerror = null;
+                  e.target.src = "https://placehold.co/400x400/png?text=No+Image";
+                }}
                 style={{
                   maxHeight: "100%",  // Ensures the image never overflows the container
                   maxWidth: "100%",   // Keeps image responsive
